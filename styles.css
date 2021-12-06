@@ -21,7 +21,7 @@ p{
   margin: 0;
 }
 
-.music-container {
+.music_container {
   background-color: white;
   border-radius: 20px;
   box-shadow: -5px 5px 30px 15px rgba(0, 0, 0, 0.3);
@@ -36,7 +36,7 @@ p{
   z-index: 1;
 }
 
-.img-container {
+.img_container {
   position: absolute;
   top: 0;
   left: 50%;
@@ -46,18 +46,19 @@ p{
   background: url("images/record.png") no-repeat center/cover;
 }
 
-.img-container img {
+.img_container img {
+  display: none;
   position: absolute;
-  top: 83px;
-  left: 85px;
+  top: 82px;
+  left: 86px;
   border-radius: 50%;
   height: 80px;
   width: 80px;
-  animation: rotate 3s linear infinite;
+  animation: rotate 30s linear infinite;
   animation-play-state: paused;
 }
 
-.music-container.play .img-container img {
+.music_container.play .img_container img {
   animation-play-state: running;
 }
 
@@ -112,13 +113,16 @@ p{
 }
 .title-name {
   font-size: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .title-author {
   color: rgba(0, 0, 0, 0.6);
   font-size: 14px;
 }
 
-.progress-container {
+.progress_container {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   height: 5px;
@@ -130,6 +134,6 @@ p{
   background-color: #b2004c;
   border-radius: 5px;
   height: 5px;
-  width: 80%;
+  width: 0;
   transition: width 0.1s linear;
 }
