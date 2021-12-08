@@ -51,7 +51,7 @@ function setDuration({target}) {
 
 function updateProgress(e) {
   let {duration, currentTime: current} = e.target;
-  const progressPercent = (current / duration) *100;
+  const progressPercent = (current / duration) * 100;
   progress.style.width = `${progressPercent}%`;
   currentTime.innerText = formatDuration(current);
 }
@@ -133,7 +133,7 @@ function addZero(num) {
 }
 
 function formatDuration(sec) {
-  return addZero((sec / 60).toFixed()) + ':' + addZero((sec % 60).toFixed())
+  return addZero(Math.floor(sec / 60)) + ':' + addZero(Math.floor(sec % 60))
 }
 
 function formatSongTitle(item) {
