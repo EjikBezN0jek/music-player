@@ -1,13 +1,14 @@
-const  musicContainer  = document.getElementById("music_container");
-const  audio = document.getElementById("audio");
-const  cover = document.getElementById("music-cover");
-const  titleName  = document.querySelector(".title-name");
-const  titleAuthor = document.querySelector(".title-author");
-const  progressContainer = document.getElementById("progress_container");
-const  progress = document.getElementById("progress");
-const  prevBtn = document.getElementById("prev");
-const  playBtn = document.getElementById("play");
-const  nextBtn = document.getElementById("next");
+const musicContainer = document.getElementById("music_container");
+const audio = document.getElementById("audio");
+const cover = document.getElementById("music-cover");
+const titleWrap = document.querySelector(".title-name-wrap");
+const titleName = document.querySelector(".title-name");
+const titleAuthor = document.querySelector(".title-author");
+const progressContainer = document.getElementById("progress_container");
+const progress = document.getElementById("progress");
+const prevBtn = document.getElementById("prev");
+const playBtn = document.getElementById("play");
+const nextBtn = document.getElementById("next");
 let currentTime = document.getElementById("current-time");
 let fullTime = document.getElementById("full-time");
 
@@ -21,7 +22,7 @@ const songs = [
   'DuftPunk-HarderBetterFasterStronger(Remix)'
 ];
 
-let songIndex = 0;
+let songIndex = 5;
 
 loadSong(songs[songIndex]);
 
@@ -29,12 +30,14 @@ loadSong(songs[songIndex]);
 *  Functions
 */
 
-function loadSong(song){
+function loadSong(song) {
   let title = formatSongTitle(song);
   if (title.length === 1) title.unshift('unknown'); // check author is exist
-  let [ author, name ] = title;
+  let [author, name] = title;
   titleAuthor.innerText = author;
   titleName.innerText = name;
+  titleName.classList.remove('title-name-long');
+  if (titleName.offsetWidth > titleWrap.offsetWidth) titleName.classList.add('title-name-long');
   audio.src = `music/${song}.mp3`;
   cover.src = `images/${song}.jpg`;
   cover.onload = () => {
@@ -61,7 +64,7 @@ function setProgress(e) {
   const clickX = e.offsetX;
   const duration = audio.duration;
 
-  audio.currentTime = (clickX / width)* duration;
+  audio.currentTime = (clickX / width) * duration;
 }
 
 function playSong() {
@@ -83,8 +86,8 @@ function pauseSong() {
 function prevSong() {
   songIndex--;
 
-  if(songIndex < 0){
-    songIndex = songs.length -1;
+  if (songIndex < 0) {
+    songIndex = songs.length - 1;
   }
 
   loadSong(songs[songIndex]);
@@ -94,7 +97,7 @@ function prevSong() {
 function nextSong() {
   songIndex++;
 
-  if(songIndex > songs.length -1){
+  if (songIndex > songs.length - 1) {
     songIndex = 0;
   }
 
@@ -106,10 +109,10 @@ function nextSong() {
 *  Events
 */
 
-playBtn.addEventListener('click', () =>{
-  const  isPlaying = musicContainer.classList.contains("play");
+playBtn.addEventListener('click', () => {
+  const isPlaying = musicContainer.classList.contains("play");
 
-  if(isPlaying){
+  if (isPlaying) {
     pauseSong();
   } else {
     playSong();
