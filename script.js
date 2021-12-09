@@ -140,5 +140,5 @@ function formatDuration(sec) {
 }
 
 function formatSongTitle(item) {
-  return item.replace(/([^-)])([A-Z(])/g, '$1 $2').split('-');
+  return item.replace(/([^-)])?([A-Z(])/g, '$1 $2').replace(/\( /g, '(').split('-');
 }
