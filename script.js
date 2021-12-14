@@ -1,3 +1,5 @@
+import songsList from './songs.js'
+
 const musicContainer = document.getElementById("music_container");
 const audio = document.getElementById("audio");
 const cover = document.getElementById("music-cover");
@@ -11,35 +13,49 @@ const playBtn = document.getElementById("play");
 const nextBtn = document.getElementById("next");
 let currentTime = document.getElementById("current-time");
 let fullTime = document.getElementById("full-time");
+const openPlaylistBtn = document.querySelector('.open-playlist-btn');
+const closePlaylistBtn = document.querySelector('.close-playlist-btn');
+const overlay = document.querySelector('.overlay');
+const playlist = document.querySelector('.playlist');
+const toggleVolumeBtn = document.querySelector('.toggle-volume-btn');
 
-const songs = [
-  'LanaDelRey-ArtDeco',
-  'MelanieMartinez-CryBaby',
-  'LanaDelRey-BornToDie(Remix)',
-  'TheNeighborhood-CryBaby',
-  'LanaDelRey-Doin\'Time',
-  'Don\'tThreatenMeWithAGoodTime',
-  'DuftPunk-HarderBetterFasterStronger(Remix)'
-];
+let songIndex = 0;
 
-let songIndex = 5;
-
-loadSong(songs[songIndex]);
+setPlaylist();
+loadSong(songsList[songIndex]);
 
 /*
 *  Functions
 */
 
+function setPlaylist() {
+  songsList.forEach((item, idx) => {
+    playlist.insertAdjacentHTML('beforeend',
+      `<div class="track-info" data-index="${idx}">
+              <p class="track-name">${item.title}</p>
+              <div class="track-wrap">
+                <p class="track-author">${item.author || 'Unknown'}</p>
+                <p class="track-time">${item.duration}</p>
+              </div>
+            </div>`
+    )});
+
+  let tracks = playlist.querySelectorAll('.track-info');
+  tracks.forEach(track => track.addEventListener('click', (e) => {
+    let index = e.target.dataset.index || e.target.offsetParent.dataset.index; // track-info || children
+    loadSong(songsList[index]);
+    playSong();
+    togglePlaylist();
+  }));
+}
+
 function loadSong(song) {
-  let title = formatSongTitle(song);
-  if (title.length === 1) title.unshift('unknown'); // check author is exist
-  let [author, name] = title;
-  titleAuthor.innerText = author;
-  titleName.innerText = name;
+  titleAuthor.innerText = song.author || 'Unknown';
+  titleName.innerText = song.title || 'Unknown song';
   titleName.classList.remove('title-name-long');
   if (titleName.offsetWidth > titleWrap.offsetWidth) titleName.classList.add('title-name-long');
-  audio.src = `music/${song}.mp3`;
-  cover.src = `images/${song}.jpg`;
+  audio.src = `music/${song.file}`;
+  cover.src = `images/${song.img}`;
   cover.onload = () => {
     cover.style.display = 'block';
     cover.classList.remove('cover-animation');
@@ -87,22 +103,42 @@ function prevSong() {
   songIndex--;
 
   if (songIndex < 0) {
-    songIndex = songs.length - 1;
+    songIndex = songsList.length - 1;
   }
 
-  loadSong(songs[songIndex]);
+  loadSong(songsList[songIndex]);
   playSong();
 }
 
 function nextSong() {
   songIndex++;
 
-  if (songIndex > songs.length - 1) {
+  if (songIndex > songsList.length - 1) {
     songIndex = 0;
   }
 
-  loadSong(songs[songIndex]);
+  loadSong(songsList[songIndex]);
   playSong();
+}
+
+function togglePlaylist(){
+  playlist.classList.toggle('playlist-open');
+
+  if (!overlay.classList.contains('overlay-open')) { // if closed
+    overlay.classList.add('overlay-open');
+    setTimeout(() => overlay.classList.add('overlay-visible'), 10);
+  } else {
+    overlay.classList.remove('overlay-visible');
+    setTimeout(() => overlay.classList.remove('overlay-open'), 500);
+  }
+}
+
+function toggleVolume() {
+  audio.muted = !audio.muted;
+  let volumeIcon = toggleVolumeBtn.querySelector('i');
+  volumeIcon.classList.toggle('fa-volume-mute');
+  volumeIcon.classList.toggle('fa-volume-up');
+  toggleVolumeBtn.blur();
 }
 
 /*
@@ -127,6 +163,11 @@ audio.addEventListener('ended', nextSong);
 
 progressContainer.addEventListener('click', setProgress);
 
+openPlaylistBtn.addEventListener('click', togglePlaylist);
+closePlaylistBtn.addEventListener('click', togglePlaylist);
+
+toggleVolumeBtn.addEventListener('click', toggleVolume);
+
 /*
 *  Utils
 */
@@ -137,8 +178,4 @@ function addZero(num) {
 
 function formatDuration(sec) {
   return addZero(Math.floor(sec / 60)) + ':' + addZero(Math.floor(sec % 60))
-}
-
-function formatSongTitle(item) {
-  return item.replace(/([^-])?([A-Z(])/g, '$1 $2').replace(/\( /g, '(').split('-');
 }

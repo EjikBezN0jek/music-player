@@ -11,47 +11,67 @@
   <title>Music player</title>
 </head>
 <body class="notranslate">
-  <h1>Music Player</h1>
-    <div class="music_container" id="music_container">
+<h1>Music Player</h1>
+<div class="music_container" id="music_container">
+  <audio src="" id="audio"></audio>
 
+  <div class="img_container">
+    <img src="" alt="" class="cover-animation" id="music-cover">
+  </div>
 
-      <audio src="" id="audio"></audio>
-
-      <div class="img_container">
-        <img src="" alt="" class="cover-animation" id="music-cover">
+  <div class="music-info">
+    <div class="title">
+      <div class="title-name-wrap">
+        <p class="title-name">loading...</p>
       </div>
-
-      <div class="music-info">
-        <div class="title" >
-          <div class="title-name-wrap">
-            <p class="title-name">loading...</p>
-          </div>
-          <p class="title-author"></p>
-        </div>
-
-        <div class="progress_container" id="progress_container">
-          <div class="progress" id="progress"></div>
-        </div>
-
-        <div class="time_container" id="time_container">
-          <p class="time-item" id="current-time">00:00</p>
-          <p class="time-item" id="full-time">00:00</p>
-        </div>
-
-      </div>
-
-      <div class="navigation">
-        <button  class="action-btn" id="prev">
-          <i class="fas fa-backward"></i>
-        </button>
-        <button class="action-btn action-btn-big" id="play" >
-          <i class="fas fa-play"></i>
-        </button>
-        <button  class="action-btn" id="next">
-          <i class="fas fa-forward"></i>
-        </button>
-      </div>
+      <p class="title-author"></p>
     </div>
-<script src="script.js"></script>
+
+    <div class="progress_container" id="progress_container">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="time_container" id="time_container">
+      <p class="time-item" id="current-time">00:00</p>
+      <p class="time-item" id="full-time">00:00</p>
+    </div>
+
+  </div>
+
+  <div class="navigation">
+    <button class="btn settings-btn track-order">
+      <i class="fas fa-random"></i>
+    </button>
+    <div class="action-btn-wrap">
+      <button class="btn action-btn" id="prev">
+        <i class="fas fa-backward"></i>
+      </button>
+      <button class="btn action-btn action-btn-big" id="play">
+        <i class="fas fa-play"></i>
+      </button>
+      <button class="btn action-btn" id="next">
+        <i class="fas fa-forward"></i>
+      </button>
+    </div>
+    <button class="btn settings-btn open-playlist-btn">
+      <i class="fas fa-list-ul"></i>
+    </button>
+  </div>
+</div>
+<div class="playlist">
+  <div class="playlist-title">
+    <button class="btn settings-btn toggle-volume-btn">
+      <i class="fas fa-volume-up"></i>
+    </button>
+    <p class="playlist-title-item">Current playlist</p>
+    <button class="btn settings-btn close-playlist-btn">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <!-- Items will be inserted in js  -->
+</div>
+<div class="overlay"></div>
+<script src="songs.js" type="module"></script>
+<script src="script.js" type="module"></script>
 </body>
 </html>
