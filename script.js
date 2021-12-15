@@ -1,12 +1,12 @@
 import songsList from './songs.js'
 
-const musicContainer = document.getElementById("music_container");
+const musicContainer = document.getElementById("music-container");
 const audio = document.getElementById("audio");
 const cover = document.getElementById("music-cover");
 const titleWrap = document.querySelector(".title-name-wrap");
 const titleName = document.querySelector(".title-name");
 const titleAuthor = document.querySelector(".title-author");
-const progressContainer = document.getElementById("progress_container");
+const progressContainer = document.getElementById("progress-container");
 const progress = document.getElementById("progress");
 const prevBtn = document.getElementById("prev");
 const playBtn = document.getElementById("play");
@@ -18,6 +18,8 @@ const closePlaylistBtn = document.querySelector('.close-playlist-btn');
 const overlay = document.querySelector('.overlay');
 const playlist = document.querySelector('.playlist');
 const toggleVolumeBtn = document.querySelector('.toggle-volume-btn');
+const trackInfoContainer = document.querySelector('.track-info-container');
+
 
 let songIndex = 0;
 
@@ -30,11 +32,17 @@ loadSong(songsList[songIndex]);
 
 function setPlaylist() {
   songsList.forEach((item, idx) => {
-    playlist.insertAdjacentHTML('beforeend',
+    trackInfoContainer.insertAdjacentHTML('beforeend',
       `<div class="track-info" data-index="${idx}">
-              <p class="track-name">${item.title}</p>
               <div class="track-wrap">
-                <p class="track-author">${item.author || 'Unknown'}</p>
+                <div class="track-cover">
+                  <img src="images/${item.img}" alt="" style="${!item.img ? 'display:none;': ''}" class="track-image">
+                  <i class="fas fa-align-left"></i>
+                </div>
+                <div class="track-title-wrap">
+                  <p class="track-name">${item.title}</p>
+                  <p class="track-author">${item.author || 'Unknown'}</p>
+                </div>
                 <p class="track-time">${item.duration}</p>
               </div>
             </div>`

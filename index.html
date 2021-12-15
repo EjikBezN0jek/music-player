@@ -12,10 +12,10 @@
 </head>
 <body class="notranslate">
 <h1>Music Player</h1>
-<div class="music_container" id="music_container">
+<div class="music-container" id="music-container">
   <audio src="" id="audio"></audio>
 
-  <div class="img_container">
+  <div class="img-container">
     <img src="" alt="" class="cover-animation" id="music-cover">
   </div>
 
@@ -27,11 +27,11 @@
       <p class="title-author"></p>
     </div>
 
-    <div class="progress_container" id="progress_container">
+    <div class="progress-container" id="progress-container">
       <div class="progress" id="progress"></div>
     </div>
 
-    <div class="time_container" id="time_container">
+    <div class="time-container">
       <p class="time-item" id="current-time">00:00</p>
       <p class="time-item" id="full-time">00:00</p>
     </div>
@@ -68,7 +68,10 @@
       <i class="fas fa-times"></i>
     </button>
   </div>
-  <!-- Items will be inserted in js  -->
+  <div class="track-info-container">
+    <!-- Items will be inserted in js  -->
+  </div>
+
 </div>
 <div class="overlay"></div>
 <script src="songs.js" type="module"></script>
