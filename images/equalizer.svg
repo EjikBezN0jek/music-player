@@ -1,0 +1,43 @@
+<svg id="equalizer" width="28px" height="28px" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <style>
+        #equalizer {
+<!--        position: relative;-->
+<!--        left: 50%;-->
+<!--        top: 2em;-->
+        }
+        #bar1 {
+        transform: rotate(180deg);
+        transform-origin: 1px 5px;
+        animation: bar 1.2s infinite linear;
+        }
+
+        #bar2 {
+        transform: rotate(180deg);
+        transform-origin: 3px 5px;
+        animation: bar 0.8s infinite linear;
+        }
+
+        #bar3 {
+        transform: rotate(180deg);
+        transform-origin: 5px 5px;
+        animation: bar 1s infinite linear;
+        }
+
+        @keyframes bar {
+        0% {
+        height: 10px;
+        }
+        50% {
+        height: 0;
+        }
+        100% {
+        height: 10px;
+        }
+        }
+    </style>
+    <g fill="rgba(255, 255, 255, 0.7)">
+        <rect id="bar1" x="0" y="0" width="2" height="2"></rect>
+        <rect id="bar2" x="0" y="0" width="2" height="5"></rect>
+        <rect id="bar3" x="0" y="0" width="2" height="7"></rect>
+    </g>
+</svg>

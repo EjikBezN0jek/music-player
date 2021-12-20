@@ -281,25 +281,13 @@ p {
 .track-info {
   position: relative;
   cursor: pointer;
-}
-
-.track-info:not(:first-child) {
-  margin: 20px 0 0;
-}
-
-.track-info::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  background-color: rgba(0, 0, 0, 0.1);
-  height: 1px;
-  width: 100%;
+  padding: 10px 20px 10px 0;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.1);
 }
 
 .track-wrap {
   display: flex;
   align-items: flex-end;
-  padding: 0 20px 0 0;
 }
 
 .track-cover {
@@ -311,15 +299,24 @@ p {
   margin-right: 10px;
 }
 
-.track-cover i {
+.track-cover .fa-play {
+  display: none;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: rotate(-90deg) translate(50%, -50%);
-  width: 20px;
-  height: 20px;
+  transform: translate(-40%, -50%);
   font-size: 20px;
-  color: #b2004c;
+  color: rgba(255,255,255,0.7);
+}
+
+.track-equalizer{
+  display: none;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 28px;
 }
 
 .track-image {

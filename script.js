@@ -30,14 +30,34 @@ loadSong(songsList[songIndex]);
 *  Functions
 */
 
+function control(e) {
+  if (!audio.src) return; // if track doesn't exist
+
+  if (e.type === 'keydown') {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      audio.currentTime += e.key === "ArrowRight" ? 10 : -10;
+    }
+  }
+
+  if (e.type === 'keyup') {
+    if (e.key === "k") return prevSong();
+    if (e.key === "l") return nextSong();
+    if (e.code === "Space" || e.key === "p") {
+      e.preventDefault();
+      return !audio.paused ? pauseSong() : playSong();
+    }
+  }
+}
+
 function setPlaylist() {
   songsList.forEach((item, idx) => {
     trackInfoContainer.insertAdjacentHTML('beforeend',
       `<div class="track-info" data-index="${idx}">
               <div class="track-wrap">
                 <div class="track-cover">
-                  <img src="images/${item.img}" alt="" style="${!item.img ? 'display:none;': ''}" class="track-image">
-                  <i class="fas fa-align-left"></i>
+                  <img src="images/${item.img}" alt="" style="${!item.img && 'display:none;'}" class="track-image">
+                  <img src="images/equalizer.svg" alt="" class="track-equalizer"/>
+                  <i class="fas fa-play"></i>
                 </div>
                 <div class="track-title-wrap">
                   <p class="track-name">${item.title}</p>
@@ -46,20 +66,42 @@ function setPlaylist() {
                 <p class="track-time">${item.duration}</p>
               </div>
             </div>`
-    )});
+    )
+  });
 
   let tracks = playlist.querySelectorAll('.track-info');
+  let equalizers = playlist.querySelectorAll('.track-equalizer');
+  let playIcons = playlist.querySelectorAll('.fa-play');
+
   tracks.forEach(track => track.addEventListener('click', (e) => {
-    let index = e.target.dataset.index || e.target.offsetParent.dataset.index; // track-info || children
-    loadSong(songsList[index]);
-    playSong();
-    togglePlaylist();
-  }));
+    let index = e.currentTarget.dataset.index;
+    let isPlaying = musicContainer.classList.contains("play");
+
+    if (songIndex === index) {
+      if (isPlaying) {
+        playIcons[songIndex].style.display = 'block';
+        equalizers[songIndex].style.display = 'none';
+        pauseSong();
+      } else {
+        playIcons[songIndex].style.display = 'none';
+        equalizers[index].style.display = 'block';
+        playSong();
+      }
+    } else {
+      loadSong(songsList[index]);
+      playIcons[songIndex].style.display = 'none';
+      equalizers[songIndex].style.display = 'none';
+      equalizers[index].style.display = 'block';
+      songIndex = index;
+      playSong();
+      togglePlaylist();
+    }
+  }), false);
 }
 
 function loadSong(song) {
-  titleAuthor.innerText = song.author || 'Unknown';
-  titleName.innerText = song.title || 'Unknown song';
+  titleAuthor.innerText = song?.author || 'Unknown';
+  titleName.innerText = song?.title || 'Unknown song';
   titleName.classList.remove('title-name-long');
   if (titleName.offsetWidth > titleWrap.offsetWidth) titleName.classList.add('title-name-long');
   audio.src = `music/${song.file}`;
@@ -129,7 +171,7 @@ function nextSong() {
   playSong();
 }
 
-function togglePlaylist(){
+function togglePlaylist() {
   playlist.classList.toggle('playlist-open');
 
   if (!overlay.classList.contains('overlay-open')) { // if closed
@@ -152,6 +194,11 @@ function toggleVolume() {
 /*
 *  Events
 */
+
+document.addEventListener('keydown', control);
+document.addEventListener('keyup', control);
+
+// audio.addEventListener("loadedmetadata", control, false);
 
 playBtn.addEventListener('click', () => {
   const isPlaying = musicContainer.classList.contains("play");
