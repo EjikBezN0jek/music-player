@@ -1,4 +1,4 @@
-import songsList from './songs.js'
+import songsInfo from './songs.js'
 
 const musicContainer = document.getElementById("music-container");
 const audio = document.getElementById("audio");
@@ -19,8 +19,10 @@ const overlay = document.querySelector('.overlay');
 const playlist = document.querySelector('.playlist');
 const toggleVolumeBtn = document.querySelector('.toggle-volume-btn');
 const trackInfoContainer = document.querySelector('.track-info-container');
+const trackOrderBtn = document.querySelector('.track-order-btn');
+let equalizers, playIcons;
 
-
+let songsList = songsInfo;
 let songIndex = 0;
 
 setPlaylist();
@@ -50,6 +52,7 @@ function control(e) {
 }
 
 function setPlaylist() {
+  trackInfoContainer.innerHTML = '';
   songsList.forEach((item, idx) => {
     trackInfoContainer.insertAdjacentHTML('beforeend',
       `<div class="track-info" data-index="${idx}">
@@ -69,30 +72,21 @@ function setPlaylist() {
     )
   });
 
+  equalizers = playlist.querySelectorAll('.track-equalizer');
+  playIcons = playlist.querySelectorAll('.fa-play');
+
   let tracks = playlist.querySelectorAll('.track-info');
-  let equalizers = playlist.querySelectorAll('.track-equalizer');
-  let playIcons = playlist.querySelectorAll('.fa-play');
 
   tracks.forEach(track => track.addEventListener('click', (e) => {
     let index = e.currentTarget.dataset.index;
     let isPlaying = musicContainer.classList.contains("play");
 
     if (songIndex === index) {
-      if (isPlaying) {
-        playIcons[songIndex].style.display = 'block';
-        equalizers[songIndex].style.display = 'none';
-        pauseSong();
-      } else {
-        playIcons[songIndex].style.display = 'none';
-        equalizers[index].style.display = 'block';
-        playSong();
-      }
+      isPlaying ? pauseSong() : playSong();
     } else {
-      loadSong(songsList[index]);
-      playIcons[songIndex].style.display = 'none';
-      equalizers[songIndex].style.display = 'none';
-      equalizers[index].style.display = 'block';
+      hideTrackIcons();
       songIndex = index;
+      loadSong(songsList[songIndex]);
       playSong();
       togglePlaylist();
     }
@@ -137,7 +131,8 @@ function playSong() {
   musicContainer.classList.add("play");
   playBtn.querySelector('i.fas').classList.remove("fa-play");
   playBtn.querySelector('i.fas').classList.add("fa-pause");
-
+  playIcons[songIndex].style.display = 'none';
+  equalizers[songIndex].style.display = 'block';
   audio.play();
 }
 
@@ -145,30 +140,72 @@ function pauseSong() {
   musicContainer.classList.remove("play");
   playBtn.querySelector('i.fas').classList.remove("fa-pause");
   playBtn.querySelector('i.fas').classList.add("fa-play");
-
+  playIcons[songIndex].style.display = 'block';
+  equalizers[songIndex].style.display = 'none';
   audio.pause();
 }
 
 function prevSong() {
+  hideTrackIcons();
   songIndex--;
-
-  if (songIndex < 0) {
-    songIndex = songsList.length - 1;
-  }
+  if (songIndex < 0) songIndex = songsList.length - 1;
+  equalizers[songIndex].style.display = 'block';
 
   loadSong(songsList[songIndex]);
   playSong();
 }
 
 function nextSong() {
+  hideTrackIcons();
   songIndex++;
-
-  if (songIndex > songsList.length - 1) {
-    songIndex = 0;
-  }
+  if (songIndex > songsList.length - 1) songIndex = 0;
+  equalizers[songIndex].style.display = 'block';
 
   loadSong(songsList[songIndex]);
   playSong();
+}
+
+function togglePlayMode(e) {
+  let mode = e.currentTarget.dataset.mode;
+
+  switch (mode) {
+    case 'rotation':
+      rotationTrack();
+      break;
+    case 'random':
+      randomTrack();
+      break;
+    case 'repeat':
+      repeatTrack();
+      break;
+    default:
+      rotationTrack();
+  }
+}
+
+function rotationTrack() {
+  trackOrderBtn.dataset.mode = 'random';
+  trackOrderBtn.querySelector('i.fas').classList.remove('fa-exchange-alt');
+  trackOrderBtn.querySelector('i.fas').classList.add('fa-random');
+  audio.loop = false;
+}
+
+function randomTrack() {
+  trackOrderBtn.dataset.mode = 'repeat';
+  trackOrderBtn.querySelector('i.fas').classList.remove('fa-random');
+  trackOrderBtn.querySelector('i.fas').classList.add('fa-sync-alt');
+  songsList = randomizeArray(songsList);
+  setPlaylist();
+}
+
+function repeatTrack() {
+  trackOrderBtn.dataset.mode = 'rotation';
+  trackOrderBtn.querySelector('i.fas').classList.remove('fa-sync-alt');
+  trackOrderBtn.querySelector('i.fas').classList.add('fa-exchange-alt');
+  songIndex = songsInfo.findIndex(song => song.title === songsList[songIndex].title);
+  songsList = songsInfo;
+  setPlaylist();
+  audio.loop = true;
 }
 
 function togglePlaylist() {
@@ -191,14 +228,17 @@ function toggleVolume() {
   toggleVolumeBtn.blur();
 }
 
+function hideTrackIcons() {
+  playIcons[songIndex].style.display = 'none';
+  equalizers[songIndex].style.display = 'none';
+}
+
 /*
 *  Events
 */
 
 document.addEventListener('keydown', control);
 document.addEventListener('keyup', control);
-
-// audio.addEventListener("loadedmetadata", control, false);
 
 playBtn.addEventListener('click', () => {
   const isPlaying = musicContainer.classList.contains("play");
@@ -218,6 +258,8 @@ audio.addEventListener('ended', nextSong);
 
 progressContainer.addEventListener('click', setProgress);
 
+trackOrderBtn.addEventListener('click', togglePlayMode);
+
 openPlaylistBtn.addEventListener('click', togglePlaylist);
 closePlaylistBtn.addEventListener('click', togglePlaylist);
 
@@ -233,4 +275,13 @@ function addZero(num) {
 
 function formatDuration(sec) {
   return addZero(Math.floor(sec / 60)) + ':' + addZero(Math.floor(sec % 60))
+}
+
+function randomizeArray(array) {
+  array = JSON.parse(JSON.stringify(array)); // copy array
+  for (let i = array.length - 1; i > 0; i--) {
+    let randomIndex = Math.floor(Math.random() * (i + 1));
+    [array[i], array[randomIndex]] = [array[randomIndex], array[i]]; // let t = array[i]; array[i] = array[randomIndex]; array[randomIndex] = t
+  }
+  return array;
 }
