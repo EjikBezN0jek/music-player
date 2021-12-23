@@ -262,6 +262,12 @@ trackOrderBtn.addEventListener('click', togglePlayMode);
 
 openPlaylistBtn.addEventListener('click', togglePlaylist);
 closePlaylistBtn.addEventListener('click', togglePlaylist);
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    togglePlaylist();
+  }
+});
+overlay.addEventListener('click',togglePlaylist);
 
 toggleVolumeBtn.addEventListener('click', toggleVolume);
 
