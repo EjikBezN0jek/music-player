@@ -1,18 +1,18 @@
 import songsInfo from './songs.js'
 
-const musicContainer = document.getElementById("music-container");
-const audio = document.getElementById("audio");
-const cover = document.getElementById("music-cover");
+const musicContainer = document.querySelector(".player");
+const audio = document.querySelector(".audio");
+const cover = document.querySelector(".player__label");
 const titleWrap = document.querySelector(".title-name-wrap");
 const titleName = document.querySelector(".title-name");
 const titleAuthor = document.querySelector(".title-author");
-const progressContainer = document.getElementById("progress-container");
-const progress = document.getElementById("progress");
+const progressContainer = document.querySelector(".progress__bar");
+const progress = document.querySelector(".progress__fill");
 const prevBtn = document.getElementById("prev");
 const playBtn = document.getElementById("play");
 const nextBtn = document.getElementById("next");
-let currentTime = document.getElementById("current-time");
-let fullTime = document.getElementById("full-time");
+let currentTime = document.querySelector(".progress__time--current");
+let fullTime = document.querySelector(".progress__time--full");
 const openPlaylistBtn = document.querySelector('.open-playlist-btn');
 const closePlaylistBtn = document.querySelector('.close-playlist-btn');
 const overlay = document.querySelector('.overlay');
@@ -20,6 +20,7 @@ const playlist = document.querySelector('.playlist');
 const toggleVolumeBtn = document.querySelector('.toggle-volume-btn');
 const trackInfoContainer = document.querySelector('.track-info-container');
 const trackOrderBtn = document.querySelector('.track-order-btn');
+const warning = document.querySelector('.warning')
 let equalizers, playIcons;
 
 let songsList = songsInfo;
@@ -38,6 +39,10 @@ function control(e) {
   if (e.type === 'keydown') {
     if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
       audio.currentTime += e.key === "ArrowRight" ? 10 : -10;
+    }
+
+    if (e.key === 'Escape') {
+      togglePlaylist();
     }
   }
 
@@ -102,8 +107,8 @@ function loadSong(song) {
   cover.src = `images/${song.img}`;
   cover.onload = () => {
     cover.style.display = 'block';
-    cover.classList.remove('cover-animation');
-    setTimeout(() => cover.classList.add('cover-animation'), 10)
+    cover.classList.remove('player__label--animation');
+    setTimeout(() => cover.classList.add('player__label--animation'), 10)
   };
   cover.onerror = () => cover.style.display = 'none';
 }
@@ -233,10 +238,16 @@ function hideTrackIcons() {
   equalizers[songIndex].style.display = 'none';
 }
 
+function resizeHandler() {
+  window.innerHeight < 550 ? warning.style.display = 'flex' : warning.style.display = 'none';
+}
+
 /*
 *  Events
 */
 
+document.addEventListener("DOMContentLoaded", resizeHandler);
+window.addEventListener('resize', resizeHandler)
 document.addEventListener('keydown', control);
 document.addEventListener('keyup', control);
 
@@ -257,18 +268,10 @@ audio.addEventListener('timeupdate', updateProgress);
 audio.addEventListener('ended', nextSong);
 
 progressContainer.addEventListener('click', setProgress);
-
 trackOrderBtn.addEventListener('click', togglePlayMode);
-
 openPlaylistBtn.addEventListener('click', togglePlaylist);
 closePlaylistBtn.addEventListener('click', togglePlaylist);
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    togglePlaylist();
-  }
-});
 overlay.addEventListener('click',togglePlaylist);
-
 toggleVolumeBtn.addEventListener('click', toggleVolume);
 
 /*
