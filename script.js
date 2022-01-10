@@ -63,7 +63,7 @@ function setPlaylist() {
       `<div class="track-info" data-index="${idx}">
               <div class="track-wrap">
                 <div class="track-cover">
-                  <img src="images/${item.img}" alt="" style="${!item.img && 'display:none;'}" class="track-image">
+                  <img src="images/${item.img || 'default.jpg'}" alt="" class="track-image">
                   <img src="images/equalizer.svg" alt="" class="track-equalizer"/>
                   <i class="fas fa-play"></i>
                 </div>
@@ -104,13 +104,11 @@ function loadSong(song) {
   titleName.classList.remove('title-name-long');
   if (titleName.offsetWidth > titleWrap.offsetWidth) titleName.classList.add('title-name-long');
   audio.src = `music/${song.file}`;
-  cover.src = `images/${song.img}`;
+  cover.src = song.img ? `images/${song.img}` : 'images/default.jpg';
   cover.onload = () => {
-    cover.style.display = 'block';
     cover.classList.remove('player__label--animation');
     setTimeout(() => cover.classList.add('player__label--animation'), 10)
   };
-  cover.onerror = () => cover.style.display = 'none';
 }
 
 function setDuration({target}) {
@@ -239,6 +237,7 @@ function hideTrackIcons() {
 }
 
 function resizeHandler() {
+  document.documentElement.style.setProperty('--vh', window.innerHeight / 100 + 'px')
   window.innerHeight < 550 ? warning.style.display = 'flex' : warning.style.display = 'none';
 }
 
