@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-  <link rel="manifest" href="site.webmanifest">
+<!--  <link rel="manifest" href="site.webmanifest">-->
   <title>Music player</title>
 </head>
 <body class="notranslate">
@@ -25,13 +25,11 @@
       <img src="" alt="" class="player__label player__label--animation">
     </div>
 
-    <div class="player__info music-info">
-      <div class="title">
-        <div class="title-name-wrap">
-          <p class="title-name">loading...</p>
-        </div>
-        <p class="title-author"></p>
+    <div class="info">
+      <div class="info__song-wrap">
+        <p class="info__song">loading...</p>
       </div>
+      <p class="info__author"></p>
     </div>
 
     <div class="progress player__progress">
@@ -45,38 +43,22 @@
     </div>
 
     <div class="navigation">
-      <button class="btn settings-btn track-order-btn" data-mode="random">
-        <i class="fas fa-random"></i>
-      </button>
-      <div class="action-btn-wrap">
-        <button class="btn action-btn" id="prev">
-          <i class="fas fa-backward"></i>
-        </button>
-        <button class="btn action-btn action-btn-big" id="play">
-          <i class="fas fa-play"></i>
-        </button>
-        <button class="btn action-btn" id="next">
-          <i class="fas fa-forward"></i>
-        </button>
-      </div>
-      <button class="btn settings-btn open-playlist-btn">
-        <i class="fas fa-list-ul"></i>
-      </button>
+      <button class="btn btn--order btn--random" data-mode="random"></button>
+      <button class="btn btn--nav btn--prev" id="prev"></button>
+      <button class="btn btn--action btn--play" id="play"></button>
+      <button class="btn btn--nav btn--next" id="next"></button>
+      <button class="btn btn--open"></button>
     </div>
   </div>
 </div>
 
 <div class="playlist">
-  <div class="playlist-title">
-    <button class="btn settings-btn toggle-volume-btn">
-      <i class="fas fa-volume-up"></i>
-    </button>
-    <p class="playlist-title-item">Your favorites</p>
-    <button class="btn settings-btn close-playlist-btn">
-      <i class="fas fa-times"></i>
-    </button>
+  <div class="playlist__header">
+    <button class="btn btn--volume-up"></button>
+    <p class="playlist__title">Your favorites</p>
+    <button class="btn btn--close"></button>
   </div>
-  <div class="track-info-container">
+  <div class="playlist__body">
     <!-- Items will be inserted in js  -->
   </div>
 

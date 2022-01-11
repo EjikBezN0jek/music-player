@@ -1,25 +1,25 @@
 import songsInfo from './songs.js'
 
-const musicContainer = document.querySelector(".player");
+const player = document.querySelector(".player");
 const audio = document.querySelector(".audio");
-const cover = document.querySelector(".player__label");
-const titleWrap = document.querySelector(".title-name-wrap");
-const titleName = document.querySelector(".title-name");
-const titleAuthor = document.querySelector(".title-author");
-const progressContainer = document.querySelector(".progress__bar");
-const progress = document.querySelector(".progress__fill");
+const playerLabel = document.querySelector(".player__label");
+const infoSongWrap = document.querySelector(".info__song-wrap");
+const infoSong = document.querySelector(".info__song");
+const infoAuthor = document.querySelector(".info__author");
+const progressBar = document.querySelector(".progress__bar");
+const progressFill = document.querySelector(".progress__fill");
 const prevBtn = document.getElementById("prev");
 const playBtn = document.getElementById("play");
 const nextBtn = document.getElementById("next");
 let currentTime = document.querySelector(".progress__time--current");
 let fullTime = document.querySelector(".progress__time--full");
-const openPlaylistBtn = document.querySelector('.open-playlist-btn');
-const closePlaylistBtn = document.querySelector('.close-playlist-btn');
+const openPlaylistBtn = document.querySelector('.btn--open');
+const closePlaylistBtn = document.querySelector('.btn--close');
 const overlay = document.querySelector('.overlay');
 const playlist = document.querySelector('.playlist');
-const toggleVolumeBtn = document.querySelector('.toggle-volume-btn');
-const trackInfoContainer = document.querySelector('.track-info-container');
-const trackOrderBtn = document.querySelector('.track-order-btn');
+const toggleVolumeBtn = document.querySelector('.btn--volume-up');
+const trackInfoContainer = document.querySelector('.playlist__body');
+const trackOrderBtn = document.querySelector('.btn--order');
 const warning = document.querySelector('.warning')
 let equalizers, playIcons;
 
@@ -60,18 +60,18 @@ function setPlaylist() {
   trackInfoContainer.innerHTML = '';
   songsList.forEach((item, idx) => {
     trackInfoContainer.insertAdjacentHTML('beforeend',
-      `<div class="track-info" data-index="${idx}">
-              <div class="track-wrap">
-                <div class="track-cover">
-                  <img src="images/${item.img || 'default.jpg'}" alt="" class="track-image">
-                  <img src="images/equalizer.svg" alt="" class="track-equalizer"/>
+      `<div class="track" data-index="${idx}">
+              <div class="track__wrap">
+                <div class="track__cover">
+                  <img src="images/${item.img || 'default.jpg'}" alt="" class="track__image">
+                  <img src="images/equalizer.svg" alt="" class="track__equalizer"/>
                   <i class="fas fa-play"></i>
                 </div>
-                <div class="track-title-wrap">
-                  <p class="track-name">${item.title}</p>
-                  <p class="track-author">${item.author || 'Unknown'}</p>
+                <div class="title__wrap">
+                  <p class="title__song">${item.title}</p>
+                  <p class="title__author">${item.author || 'Unknown'}</p>
                 </div>
-                <p class="track-time">${item.duration}</p>
+                <p class="track__time">${item.duration}</p>
               </div>
             </div>`
     )
@@ -80,11 +80,11 @@ function setPlaylist() {
   equalizers = playlist.querySelectorAll('.track-equalizer');
   playIcons = playlist.querySelectorAll('.fa-play');
 
-  let tracks = playlist.querySelectorAll('.track-info');
+  let tracks = playlist.querySelectorAll('.track');
 
   tracks.forEach(track => track.addEventListener('click', (e) => {
     let index = e.currentTarget.dataset.index;
-    let isPlaying = musicContainer.classList.contains("play");
+    let isPlaying = player.classList.contains("play");
 
     if (songIndex === index) {
       isPlaying ? pauseSong() : playSong();
@@ -99,15 +99,15 @@ function setPlaylist() {
 }
 
 function loadSong(song) {
-  titleAuthor.innerText = song?.author || 'Unknown';
-  titleName.innerText = song?.title || 'Unknown song';
-  titleName.classList.remove('title-name-long');
-  if (titleName.offsetWidth > titleWrap.offsetWidth) titleName.classList.add('title-name-long');
+  infoAuthor.innerText = song?.author || 'Unknown';
+  infoSong.innerText = song?.title || 'Unknown song';
+  infoSong.classList.remove('info__song--animation');
+  if (infoSong.offsetWidth > infoSongWrap.offsetWidth) infoSong.classList.add('info__song--animation');
   audio.src = `music/${song.file}`;
-  cover.src = song.img ? `images/${song.img}` : 'images/default.jpg';
-  cover.onload = () => {
-    cover.classList.remove('player__label--animation');
-    setTimeout(() => cover.classList.add('player__label--animation'), 10)
+  playerLabel.src = song.img ? `images/${song.img}` : 'images/default.jpg';
+  playerLabel.onload = () => {
+    playerLabel.classList.remove('player__label--animation');
+    setTimeout(() => playerLabel.classList.add('player__label--animation'), 10)
   };
 }
 
@@ -118,7 +118,7 @@ function setDuration({target}) {
 function updateProgress(e) {
   let {duration, currentTime: current} = e.target;
   const progressPercent = (current / duration) * 100;
-  progress.style.width = `${progressPercent}%`;
+  progressFill.style.width = `${progressPercent}%`;
   currentTime.innerText = formatDuration(current);
 }
 
@@ -131,18 +131,18 @@ function setProgress(e) {
 }
 
 function playSong() {
-  musicContainer.classList.add("play");
-  playBtn.querySelector('i.fas').classList.remove("fa-play");
-  playBtn.querySelector('i.fas').classList.add("fa-pause");
+  player.classList.add("play");
+  playBtn.classList.remove("btn--play");
+  playBtn.classList.add("btn--pause");
   playIcons[songIndex].style.display = 'none';
   equalizers[songIndex].style.display = 'block';
   audio.play();
 }
 
 function pauseSong() {
-  musicContainer.classList.remove("play");
-  playBtn.querySelector('i.fas').classList.remove("fa-pause");
-  playBtn.querySelector('i.fas').classList.add("fa-play");
+  player.classList.remove("play");
+  playBtn.classList.remove("btn--pause");
+  playBtn.classList.add("btn--play");
   playIcons[songIndex].style.display = 'block';
   equalizers[songIndex].style.display = 'none';
   audio.pause();
@@ -188,23 +188,23 @@ function togglePlayMode(e) {
 
 function rotationTrack() {
   trackOrderBtn.dataset.mode = 'random';
-  trackOrderBtn.querySelector('i.fas').classList.remove('fa-exchange-alt');
-  trackOrderBtn.querySelector('i.fas').classList.add('fa-random');
+  trackOrderBtn.classList.remove('btn--rotation');
+  trackOrderBtn.classList.add('btn--random');
   audio.loop = false;
 }
 
 function randomTrack() {
   trackOrderBtn.dataset.mode = 'repeat';
-  trackOrderBtn.querySelector('i.fas').classList.remove('fa-random');
-  trackOrderBtn.querySelector('i.fas').classList.add('fa-sync-alt');
+  trackOrderBtn.classList.remove('btn--random');
+  trackOrderBtn.classList.add('btn--repeat');
   songsList = randomizeArray(songsList);
   setPlaylist();
 }
 
 function repeatTrack() {
   trackOrderBtn.dataset.mode = 'rotation';
-  trackOrderBtn.querySelector('i.fas').classList.remove('fa-sync-alt');
-  trackOrderBtn.querySelector('i.fas').classList.add('fa-exchange-alt');
+  trackOrderBtn.classList.remove('btn--repeat');
+  trackOrderBtn.classList.add('btn--rotation');
   songIndex = songsInfo.findIndex(song => song.title === songsList[songIndex].title);
   songsList = songsInfo;
   setPlaylist();
@@ -212,22 +212,21 @@ function repeatTrack() {
 }
 
 function togglePlaylist() {
-  playlist.classList.toggle('playlist-open');
+  playlist.classList.toggle('playlist--open');
 
-  if (!overlay.classList.contains('overlay-open')) { // if closed
-    overlay.classList.add('overlay-open');
-    setTimeout(() => overlay.classList.add('overlay-visible'), 10);
+  if (!overlay.classList.contains('overlay--open')) { // if closed
+    overlay.classList.add('overlay--open');
+    setTimeout(() => overlay.classList.add('overlay--visible'), 10);
   } else {
-    overlay.classList.remove('overlay-visible');
-    setTimeout(() => overlay.classList.remove('overlay-open'), 500);
+    overlay.classList.remove('overlay--visible');
+    setTimeout(() => overlay.classList.remove('overlay--open'), 500);
   }
 }
 
 function toggleVolume() {
   audio.muted = !audio.muted;
-  let volumeIcon = toggleVolumeBtn.querySelector('i');
-  volumeIcon.classList.toggle('fa-volume-mute');
-  volumeIcon.classList.toggle('fa-volume-up');
+  toggleVolumeBtn.classList.toggle('btn--volume-mute');
+  toggleVolumeBtn.classList.toggle('btn--volume-up');
   toggleVolumeBtn.blur();
 }
 
@@ -251,7 +250,7 @@ document.addEventListener('keydown', control);
 document.addEventListener('keyup', control);
 
 playBtn.addEventListener('click', () => {
-  const isPlaying = musicContainer.classList.contains("play");
+  const isPlaying = player.classList.contains("play");
 
   if (isPlaying) {
     pauseSong();
@@ -266,7 +265,7 @@ audio.addEventListener('canplaythrough', setDuration);
 audio.addEventListener('timeupdate', updateProgress);
 audio.addEventListener('ended', nextSong);
 
-progressContainer.addEventListener('click', setProgress);
+progressBar.addEventListener('click', setProgress);
 trackOrderBtn.addEventListener('click', togglePlayMode);
 openPlaylistBtn.addEventListener('click', togglePlaylist);
 closePlaylistBtn.addEventListener('click', togglePlaylist);
