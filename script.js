@@ -1,18 +1,18 @@
-import songsInfo from './songs.js'
+import songsInfo from './songs.js';
 
-const player = document.querySelector(".player");
-const audio = document.querySelector(".audio");
-const playerLabel = document.querySelector(".player__label");
-const infoSongWrap = document.querySelector(".info__song-wrap");
-const infoSong = document.querySelector(".info__song");
-const infoAuthor = document.querySelector(".info__author");
-const progressBar = document.querySelector(".progress__bar");
-const progressFill = document.querySelector(".progress__fill");
-const prevBtn = document.getElementById("prev");
-const playBtn = document.getElementById("play");
-const nextBtn = document.getElementById("next");
-let currentTime = document.querySelector(".progress__time--current");
-let fullTime = document.querySelector(".progress__time--full");
+const player = document.querySelector('.player');
+const audio = document.querySelector('.audio');
+const playerLabel = document.querySelector('.player__label');
+const infoSongWrap = document.querySelector('.info__song-wrap');
+const infoSong = document.querySelector('.info__song');
+const infoAuthor = document.querySelector('.info__author');
+const progressBar = document.querySelector('.progress__bar');
+const progressFill = document.querySelector('.progress__fill');
+const prevBtn = document.getElementById('prev');
+const playBtn = document.getElementById('play');
+const nextBtn = document.getElementById('next');
+let currentTime = document.querySelector('.progress__time--current');
+let fullTime = document.querySelector('.progress__time--full');
 const openPlaylistBtn = document.querySelector('.btn--open');
 const closePlaylistBtn = document.querySelector('.btn--close');
 const overlay = document.querySelector('.overlay');
@@ -20,7 +20,7 @@ const playlist = document.querySelector('.playlist');
 const toggleVolumeBtn = document.querySelector('.btn--volume-up');
 const trackInfoContainer = document.querySelector('.playlist__body');
 const trackOrderBtn = document.querySelector('.btn--order');
-const warning = document.querySelector('.warning')
+const warning = document.querySelector('.warning');
 let equalizers, playIcons;
 
 let songsList = songsInfo;
@@ -30,15 +30,15 @@ setPlaylist();
 loadSong(songsList[songIndex]);
 
 /*
-*  Functions
-*/
+ *  Functions
+ */
 
 function control(e) {
   if (!audio.src) return; // if track doesn't exist
 
   if (e.type === 'keydown') {
-    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-      audio.currentTime += e.key === "ArrowRight" ? 10 : -10;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      audio.currentTime += e.key === 'ArrowRight' ? 10 : -10;
     }
 
     if (e.key === 'Escape') {
@@ -47,9 +47,9 @@ function control(e) {
   }
 
   if (e.type === 'keyup') {
-    if (e.key === "k") return prevSong();
-    if (e.key === "l") return nextSong();
-    if (e.code === "Space" || e.key === "p") {
+    if (e.key === 'k') return prevSong();
+    if (e.key === 'l') return nextSong();
+    if (e.code === 'Space' || e.key === 'p') {
       e.preventDefault();
       return !audio.paused ? pauseSong() : playSong();
     }
@@ -59,7 +59,8 @@ function control(e) {
 function setPlaylist() {
   trackInfoContainer.innerHTML = '';
   songsList.forEach((item, idx) => {
-    trackInfoContainer.insertAdjacentHTML('beforeend',
+    trackInfoContainer.insertAdjacentHTML(
+      'beforeend',
       `<div class="track" data-index="${idx}">
               <div class="track__wrap">
                 <div class="track__cover">
@@ -73,29 +74,33 @@ function setPlaylist() {
                 </div>
                 <p class="track__time">${item.duration}</p>
               </div>
-            </div>`
-    )
+            </div>`,
+    );
   });
 
-  equalizers = playlist.querySelectorAll('.track-equalizer');
+  equalizers = playlist.querySelectorAll('.track__equalizer');
   playIcons = playlist.querySelectorAll('.fa-play');
 
   let tracks = playlist.querySelectorAll('.track');
 
-  tracks.forEach(track => track.addEventListener('click', (e) => {
-    let index = e.currentTarget.dataset.index;
-    let isPlaying = player.classList.contains("play");
+  tracks.forEach(
+    track =>
+      track.addEventListener('click', e => {
+        let index = e.currentTarget.dataset.index;
+        let isPlaying = player.classList.contains('play');
 
-    if (songIndex === index) {
-      isPlaying ? pauseSong() : playSong();
-    } else {
-      hideTrackIcons();
-      songIndex = index;
-      loadSong(songsList[songIndex]);
-      playSong();
-      togglePlaylist();
-    }
-  }), false);
+        if (songIndex === index) {
+          isPlaying ? pauseSong() : playSong();
+        } else {
+          hideTrackIcons();
+          songIndex = index;
+          loadSong(songsList[songIndex]);
+          playSong();
+          togglePlaylist();
+        }
+      }),
+    false,
+  );
 }
 
 function loadSong(song) {
@@ -107,16 +112,16 @@ function loadSong(song) {
   playerLabel.src = song.img ? `images/${song.img}` : 'images/default.jpg';
   playerLabel.onload = () => {
     playerLabel.classList.remove('player__label--animation');
-    setTimeout(() => playerLabel.classList.add('player__label--animation'), 10)
+    setTimeout(() => playerLabel.classList.add('player__label--animation'), 10);
   };
 }
 
-function setDuration({target}) {
+function setDuration({ target }) {
   fullTime.innerText = formatDuration(target.duration);
 }
 
 function updateProgress(e) {
-  let {duration, currentTime: current} = e.target;
+  let { duration, currentTime: current } = e.target;
   const progressPercent = (current / duration) * 100;
   progressFill.style.width = `${progressPercent}%`;
   currentTime.innerText = formatDuration(current);
@@ -131,18 +136,18 @@ function setProgress(e) {
 }
 
 function playSong() {
-  player.classList.add("play");
-  playBtn.classList.remove("btn--play");
-  playBtn.classList.add("btn--pause");
+  player.classList.add('play');
+  playBtn.classList.remove('btn--play');
+  playBtn.classList.add('btn--pause');
   playIcons[songIndex].style.display = 'none';
   equalizers[songIndex].style.display = 'block';
   audio.play();
 }
 
 function pauseSong() {
-  player.classList.remove("play");
-  playBtn.classList.remove("btn--pause");
-  playBtn.classList.add("btn--play");
+  player.classList.remove('play');
+  playBtn.classList.remove('btn--pause');
+  playBtn.classList.add('btn--play');
   playIcons[songIndex].style.display = 'block';
   equalizers[songIndex].style.display = 'none';
   audio.pause();
@@ -214,7 +219,8 @@ function repeatTrack() {
 function togglePlaylist() {
   playlist.classList.toggle('playlist--open');
 
-  if (!overlay.classList.contains('overlay--open')) { // if closed
+  if (!overlay.classList.contains('overlay--open')) {
+    // if closed
     overlay.classList.add('overlay--open');
     setTimeout(() => overlay.classList.add('overlay--visible'), 10);
   } else {
@@ -236,21 +242,21 @@ function hideTrackIcons() {
 }
 
 function resizeHandler() {
-  document.documentElement.style.setProperty('--vh', window.innerHeight / 100 + 'px')
-  window.innerHeight < 550 ? warning.style.display = 'flex' : warning.style.display = 'none';
+  document.documentElement.style.setProperty('--vh', window.innerHeight / 100 + 'px');
+  window.innerHeight < 550 ? (warning.style.display = 'flex') : (warning.style.display = 'none');
 }
 
 /*
-*  Events
-*/
+ *  Events
+ */
 
-document.addEventListener("DOMContentLoaded", resizeHandler);
-window.addEventListener('resize', resizeHandler)
+document.addEventListener('DOMContentLoaded', resizeHandler);
+window.addEventListener('resize', resizeHandler);
 document.addEventListener('keydown', control);
 document.addEventListener('keyup', control);
 
 playBtn.addEventListener('click', () => {
-  const isPlaying = player.classList.contains("play");
+  const isPlaying = player.classList.contains('play');
 
   if (isPlaying) {
     pauseSong();
@@ -269,19 +275,19 @@ progressBar.addEventListener('click', setProgress);
 trackOrderBtn.addEventListener('click', togglePlayMode);
 openPlaylistBtn.addEventListener('click', togglePlaylist);
 closePlaylistBtn.addEventListener('click', togglePlaylist);
-overlay.addEventListener('click',togglePlaylist);
+overlay.addEventListener('click', togglePlaylist);
 toggleVolumeBtn.addEventListener('click', toggleVolume);
 
 /*
-*  Utils
-*/
+ *  Utils
+ */
 
 function addZero(num) {
   return num < 10 ? `0${num}` : num;
 }
 
 function formatDuration(sec) {
-  return addZero(Math.floor(sec / 60)) + ':' + addZero(Math.floor(sec % 60))
+  return addZero(Math.floor(sec / 60)) + ':' + addZero(Math.floor(sec % 60));
 }
 
 function randomizeArray(array) {
